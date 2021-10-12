@@ -29,7 +29,7 @@ impl Widgetlike for WindowState {
     }
 
     fn draw<'frame>(&self, _selected: bool, brush: Brush, menu: WidgetMenu<'frame, Self>) {
-        brush.fill(FSem::new().color(menu.ui.theme().window.color));
+        brush.fill(FSem::new().sem(SemanticContent::Blank).color(menu.ui.theme().window.color));
 
         let borders = self.window_border_override.unwrap_or(menu.ui.theme().window.borders);
         let inner = match borders {

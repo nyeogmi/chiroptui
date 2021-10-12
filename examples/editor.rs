@@ -1,9 +1,8 @@
 use std::{process::exit};
 
-use chiropterm::{*, colors::{Light, LtRed, White}};
+use chiropterm::{*, colors::{LtRed, White}};
 use euclid::*;
 use chiroptui::*;
-use chiroptui::look_and_feel::*;
 
 const ASPECT_CONFIG: AspectConfig = AspectConfig {
     pref_min_term_size: size2(80, 50),  // but expect ~112x60
@@ -22,11 +21,13 @@ pub fn main() {
 }
 
 fn main_loop(io: &mut IO) {
-    let mut theme = Theme::W95_FRUITY;
+    let theme = Theme::W95_FRUITY;
+    /*
     theme.window.borders = WindowBorders::DOS {
         active_title_fg: theme.window.color.1,
         inactive_title_fg: Light[2],
     };
+    */
 
     let ui = UI::new(theme);
     let label: Label = Label::new().setup(|l| {
@@ -54,7 +55,7 @@ fn main_loop(io: &mut IO) {
 
                 return Signal::Modal(Box::new(|io: &mut IO| {
                     io.menu(|out, menu| {
-                        let i = menu.on_click(|_| Signal::Break);
+                        let i = menu.on_mouse(|_| Signal::Break);
                         out.brush().region(rect(2, 2, 80, 80)).interactor(i, (255, 255)).putfs("HELLO, ROBOT!");
 
                         menu.on_key(OnKey::only(Keycode::A).pressed(), |k| {
@@ -126,6 +127,14 @@ fn main_loop(io: &mut IO) {
                 w.set_title("WINDOW 3");
                 w.set(Label::new().setup(|l| { l.set_text("I'm a bat!"); }));
             }));
+        }));
+        c.add(Spacer::new());
+        c.add(Window::new().setup(|w| {
+            w.set(BulletinBoard::new().setup(|bb| {
+                bb.add(point2(0, 0), Label::new().setup(|l| { l.set_text("Baby seal") }));
+                bb.add(point2(2, 0), Label::new().setup(|l| { l.set_text("t zone!") }));
+                bb.add(point2(2, 2), Label::new().setup(|l| { l.set_text("t zone!") }));
+            }))
         }));
         c.add(Spacer::new());
     });
