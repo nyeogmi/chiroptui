@@ -1,4 +1,5 @@
 mod border;
+mod bulletin_board;
 mod column;
 mod container;
 mod deck;
@@ -7,6 +8,7 @@ mod scrollable;
 mod spacer;
 
 pub use border::{Border, BorderState};
+pub use bulletin_board::{BulletinBoard, BulletinBoardState};
 pub use column::{Column, ColumnState};
 pub use container::{Container, ContainerState};
 pub use deck::{Deck, DeckState};

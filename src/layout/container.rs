@@ -44,7 +44,7 @@ impl Widgetlike for ContainerState {
 }
 
 impl ContainerState {
-    pub fn set<X: Widgetlike>(&mut self, w: Widget<X>) {
-        self.widget = Some(AnyWidget::wrap(w))
+    pub fn set<X: Into<AnyWidget>>(&mut self, w: X) {
+        self.widget = Some(w.into())
     }
 }

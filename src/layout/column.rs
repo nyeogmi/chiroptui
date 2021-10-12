@@ -59,8 +59,12 @@ impl Widgetlike for ColumnState {
 }
 
 impl ColumnState {
-    pub fn add<X: Widgetlike>(&mut self, w: Widget<X>) {
-        self.widgets.push(AnyWidget::wrap(w))
+    pub fn clear(&mut self) {
+        self.widgets.clear()
+    }
+
+    pub fn add<X: Into<AnyWidget>>(&mut self, w: X) {
+        self.widgets.push(w.into())
     }
 }
 

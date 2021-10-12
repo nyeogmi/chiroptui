@@ -32,7 +32,7 @@ impl Widgetlike for ButtonState {
     }
 
     fn draw<'frame>(&self, _selected: bool, brush: Brush, menu: WidgetMenu<'frame, Self>) {
-        let click_interactor = menu.on_click(move |ui, this, click: MouseEvent| {
+        let click_interactor = menu.on_mouse(move |ui, this, click: MouseEvent| {
             match click {
                 MouseEvent::Click(_, _, _) => { 
                     return ButtonState::click(ui, this, InputEvent::Mouse(click));
@@ -40,6 +40,7 @@ impl Widgetlike for ButtonState {
                 MouseEvent::Up(_, _, _) => {}
                 MouseEvent::Drag {..} => {}
                 MouseEvent::Scroll(_, _, _) => {}
+                MouseEvent::Wiggle {..} => {}
             };
             Signal::Refresh
         });

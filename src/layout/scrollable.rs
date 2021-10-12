@@ -68,7 +68,7 @@ impl Widgetlike for ScrollableState {
 
                 let scrollbar_rect = rect(0, ix_top + 2, 2, ix_bot - ix_top);
 
-                let top_button_interactor = menu.on_click(move |_, w, me| {
+                let top_button_interactor = menu.on_mouse(move |_, w, me| {
                     match me {
                         MouseEvent::Click(MouseButton::Left, _, _) => { 
                             w.unique.set_offset(w.unique.offset.get() - scroll_offset_for(1 as f32).max(2.0), inner_height, brush_height); 
@@ -78,11 +78,12 @@ impl Widgetlike for ScrollableState {
                         MouseEvent::Up(_, _, _) => {}
                         MouseEvent::Drag { .. } => {}
                         MouseEvent::Scroll(_, _, _) => {}
+                        MouseEvent::Wiggle {..} => {}
                     };
                     Signal::Continue
                 });
 
-                let btm_button_interactor = menu.on_click(move |_, w, me| {
+                let btm_button_interactor = menu.on_mouse(move |_, w, me| {
                     match me {
                         MouseEvent::Click(MouseButton::Left, _, _) => { 
                             w.unique.set_offset(w.unique.offset.get() + scroll_offset_for(1 as f32).max(2.0), inner_height, brush_height); 
@@ -92,11 +93,12 @@ impl Widgetlike for ScrollableState {
                         MouseEvent::Up(_, _, _) => {}
                         MouseEvent::Drag { .. } => {}
                         MouseEvent::Scroll(_, _, _) => {}
+                        MouseEvent::Wiggle {..} => {}
                     };
                     Signal::Continue
                 });
 
-                let bar_interactor = menu.on_click(move |_, w, me| {
+                let bar_interactor = menu.on_mouse(move |_, w, me| {
                     // let me = me.offset(size2(scrollbar_rect.min_x() - brush.rect().min_x(), 0));
                     // may be no need, X doesn't matter
                     match me {
@@ -129,7 +131,8 @@ impl Widgetlike for ScrollableState {
                                 inner_height, brush_height,
                             );
                             return Signal::Refresh;
-                        }
+                        },
+                        MouseEvent::Wiggle { .. } => {}
                     }
                     Signal::Continue
                 });
@@ -207,7 +210,7 @@ impl ScrollableState {
 }
 
 impl ScrollableState {
-    pub fn set<X: Widgetlike>(&mut self, w: Widget<X>) {
-        self.widget = Some(AnyWidget::wrap(w))
+    pub fn set<X: Into<AnyWidget>>(&mut self, w: X) {
+        self.widget = Some(w.into())
     }
 }

@@ -63,7 +63,7 @@ impl Widgetlike for InputBoxState {
             )
         }
 
-        let click_interactor = menu.on_click(move |ui, this, click: MouseEvent| {
+        let click_interactor = menu.on_mouse(move |ui, this, click: MouseEvent| {
             match click {
                 MouseEvent::Click(MouseButton::Left, point, _) => {
                     ui.select(this);
@@ -85,6 +85,7 @@ impl Widgetlike for InputBoxState {
                 },
                 MouseEvent::Drag {..} => {}
                 MouseEvent::Scroll(_, _, _) => {}
+                MouseEvent::Wiggle {..} => {}
             };
             Signal::Continue
         });

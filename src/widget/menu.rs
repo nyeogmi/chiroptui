@@ -39,11 +39,11 @@ impl<'frame, T: Widgetlike> WidgetMenu<'frame, T> {
         })
     }
 
-    pub fn on_click(&self, cb: impl 'frame+Fn(UI, &mut WidgetCommon<T>, MouseEvent) -> Signal) -> Interactor {
+    pub fn on_mouse(&self, cb: impl 'frame+Fn(UI, &mut WidgetCommon<T>, MouseEvent) -> Signal) -> Interactor {
         let state = self.state.clone();
         let o = self.brush_offset;
         let ui = self.ui.share();
-        self.menu.on_click(move |inp| {
+        self.menu.on_mouse(move |inp| {
             cb(ui.share(), &mut state.borrow_mut(), inp.offset(-o))
         })
     }

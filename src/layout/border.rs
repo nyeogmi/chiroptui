@@ -1,6 +1,6 @@
 use chiropterm::Brush;
 
-use crate::{InternalWidgetDimensions, UI, Widget, WidgetMenu, Widgetlike, LayoutHacks};
+use crate::{AnyWidget, InternalWidgetDimensions, LayoutHacks, UI, Widget, WidgetMenu, Widgetlike};
 
 use super::{Column, Container, Row};
 
@@ -23,7 +23,7 @@ pub enum BorderSlot {
 }
 
 impl BorderState {
-    pub fn set<X: Widgetlike>(&mut self, slot: BorderSlot, w: Widget<X>) {
+    pub fn set<X: Into<AnyWidget>>(&mut self, slot: BorderSlot, w: X) {
         match slot {
             BorderSlot::North => self.north.setup(|x| x.set(w)),
             BorderSlot::West => self.west.setup(|x| x.set(w)),
@@ -33,23 +33,23 @@ impl BorderState {
         };
     }
 
-    pub fn set_north<X: Widgetlike>(&mut self, w: Widget<X>) {
+    pub fn set_north<X: Into<AnyWidget>>(&mut self, w: X) {
         self.set(BorderSlot::North, w)
     }
 
-    pub fn set_west<X: Widgetlike>(&mut self, w: Widget<X>) {
+    pub fn set_west<X: Into<AnyWidget>>(&mut self, w: X) {
         self.set(BorderSlot::West, w)
     }
 
-    pub fn set_east<X: Widgetlike>(&mut self, w: Widget<X>) {
+    pub fn set_east<X: Into<AnyWidget>>(&mut self, w: X) {
         self.set(BorderSlot::East, w)
     }
 
-    pub fn set_south<X: Widgetlike>(&mut self, w: Widget<X>) {
+    pub fn set_south<X: Into<AnyWidget>>(&mut self, w: X) {
         self.set(BorderSlot::South, w)
     }
 
-    pub fn set_center<X: Widgetlike>(&mut self, w: Widget<X>) {
+    pub fn set_center<X: Into<AnyWidget>>(&mut self, w: X) {
         self.set(BorderSlot::Center, w)
     }
 }

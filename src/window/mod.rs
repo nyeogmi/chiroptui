@@ -12,6 +12,7 @@ pub struct WindowState {
     title_text: Option<String>,  // all labels are potentially shared, so we have to clone it to provide a getter
     widget: Option<AnyWidget>,
 
+    pub window_border_override: Option<WindowBorders>,
     pub layout_hacks: LayoutHacks,
 }
 
@@ -22,6 +23,7 @@ impl Widgetlike for WindowState {
             title_text: None,
             widget: None,
 
+            window_border_override: None,
             layout_hacks: LayoutHacks::new(),
         }
     }
@@ -29,7 +31,8 @@ impl Widgetlike for WindowState {
     fn draw<'frame>(&self, _selected: bool, brush: Brush, menu: WidgetMenu<'frame, Self>) {
         brush.fill(FSem::new().color(menu.ui.theme().window.color));
 
-        let inner = match menu.ui.theme().window.borders {
+        let borders = self.window_border_override.unwrap_or(menu.ui.theme().window.borders);
+        let inner = match borders {
             WindowBorders::W95 { bevel, active_title: active_title_color, inactive_title: inactive_title_color } => {
                 brush.bevel_w95(bevel);
 
@@ -63,6 +66,7 @@ impl Widgetlike for WindowState {
                 // TODO: Use title
             }
             WindowBorders::DOS { 
+                border, border_double,
                 active_title_fg,
                 inactive_title_fg,
             } => {
@@ -72,7 +76,7 @@ impl Widgetlike for WindowState {
                     inactive_title_fg
                 };
 
-                brush.fg(title_color).draw_box(false);  // TODO. Box and box color in theme
+                brush.fg(border).draw_box(border_double);  // TODO. Box and box color in theme
 
                 if let Some(title) = &self.title {
                     let title_brush = brush.region(rect(2, 0, brush.rect().size.width - 4, 2)).fg(title_color);
@@ -90,7 +94,8 @@ impl Widgetlike for WindowState {
     }
 
     fn estimate_dimensions(&self, ui: &UI, width: isize) -> InternalWidgetDimensions {
-        let ((pad_x, pad_y), (align_x, align_y)) = match ui.theme().window.borders {
+        let borders = self.window_border_override.unwrap_or(ui.theme().window.borders);
+        let ((pad_x, pad_y), (align_x, align_y)) = match borders {
             WindowBorders::W95 { .. } => {
                 if self.title.is_some() {
                     ((2, 3), (1, 1))
@@ -131,8 +136,8 @@ impl Widgetlike for WindowState {
 }
 
 impl WindowState {
-    pub fn set<X: Widgetlike>(&mut self, w: Widget<X>) {
-        self.widget = Some(AnyWidget::wrap(w))
+    pub fn set<X: Into<AnyWidget>>(&mut self, w: X) {
+        self.widget = Some(w.into())
     }
 }
 

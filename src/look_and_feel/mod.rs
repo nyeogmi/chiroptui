@@ -29,8 +29,11 @@ pub enum WindowBorders {
         inactive_title: ([u8; 4], u8),
     }, // TODO: Default title bar color?
     DOS { 
+        border: u8,
+        border_double: bool,
         active_title_fg: u8,
         inactive_title_fg: u8,
+        // TODO: Shadow?
     },
 }
 

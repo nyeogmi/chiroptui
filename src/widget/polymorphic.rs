@@ -25,6 +25,10 @@ impl AnyWidget {
 
         self.implementation.poly_draw(ui, brush, menu);
     }
+    
+    pub fn share(&self) -> AnyWidget {
+        return self.implementation.poly_share()
+    }
 
     pub(crate) fn clear_layout_cache_if_needed(&self, ui: &UI) {
         self.implementation.poly_clear_layout_cache_if_needed(ui)
@@ -35,6 +39,7 @@ trait AWidget: 'static {
     fn poly_estimate_dimensions(&self, ui: &UI, width: isize) -> WidgetDimensions;
     fn poly_draw<'frame>(&self, ui: UI, brush: Brush, menu: Menu<'frame>);
     fn poly_clear_layout_cache_if_needed(&self, ui: &UI);
+    fn poly_share(&self) -> AnyWidget;
 }
 
 impl<T: Widgetlike> AWidget for Widget<T> {
@@ -48,5 +53,15 @@ impl<T: Widgetlike> AWidget for Widget<T> {
 
     fn poly_clear_layout_cache_if_needed(&self, ui: &UI) {
         self.clear_layout_cache_if_needed(ui)
+    }
+
+    fn poly_share(&self) -> AnyWidget {
+        AnyWidget::wrap(self.share())
+    }
+}
+
+impl<T: Widgetlike> From<Widget<T>> for AnyWidget {
+    fn from(w: Widget<T>) -> Self {
+        AnyWidget::wrap(w)
     }
 }
